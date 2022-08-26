@@ -1,0 +1,1 @@
+export 'package:weather/domain/entities/weather/weather_entity.dart';
