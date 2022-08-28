@@ -1,6 +1,6 @@
 ## Usage for development
 1. Open your terminal or command prompt.
-2. Type `git clone https://github.com/fadilhim/SweetRoom-Frontend.git`.
+2. Type `git clone https://github.com/fadilhim/59f67b925a245366066abc3fd20a05219f2b501d1204dd64bf5fe7da38ae744b.git`.
 3. Make sure you already install flutter, if you don't then go check their 
    [official website](https://docs.flutter.dev/) for installment.
 4. Run `flutter pub get` inside terminal to get all the dependencies we need.
