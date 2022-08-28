@@ -38,18 +38,6 @@ class _WeatherListPageState extends State<WeatherListPage> {
         },
         child: BlocBuilder<WeatherBloc, WeatherState>(
           builder: (context, state) {
-            return ListView.separated(
-              padding: const EdgeInsets.only(top: 12),
-              itemCount: 10,
-              separatorBuilder: (context, index) {
-                return const Divider(
-                  color: Colors.grey,
-                );
-              },
-              itemBuilder: (context, index) {
-                return const WeatherLoadingCard();
-              },
-            );
             return state.weatherList.when(
               loading: (_) {
                 return ListView.separated(

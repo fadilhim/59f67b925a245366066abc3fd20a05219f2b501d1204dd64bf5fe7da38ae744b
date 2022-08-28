@@ -1,6 +1,12 @@
 part of 'weather_bloc.dart';
 
-@immutable
-abstract class WeatherState {}
+@freezed
+class WeatherState with _$WeatherState {
+  const factory WeatherState({
+    required ResourceState<List<WeatherEntity>?> weatherList,
+  }) = _WeatherState;
 
-class WeatherInitial extends WeatherState {}
+  factory WeatherState.initial() => const WeatherState(
+    weatherList: ResourceState.loading(),
+  );
+}
