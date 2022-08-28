@@ -1,0 +1,1 @@
+export 'package:weather/domain/interactors/weather/weather_interactor.dart';

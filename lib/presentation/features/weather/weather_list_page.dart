@@ -1,6 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:weather/domain/entities/entities.dart';
-import 'package:weather/gen/assets.gen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:weather/presentation/blocs/weather/weather_bloc.dart';
+import 'package:weather/presentation/routers/router.dart';
 import 'package:weather/presentation/widgets/widgets.dart';
 
 class WeatherListPage extends StatefulWidget {
@@ -11,32 +14,86 @@ class WeatherListPage extends StatefulWidget {
 }
 
 class _WeatherListPageState extends State<WeatherListPage> {
+  late final RefreshController _refreshController;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshController = RefreshController(initialRefresh: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weather App'),
       ),
-      body: ListView.separated(
-        itemCount: 2,
-        separatorBuilder: (context, index) {
-          return const SizedBox();
+      body: SmartRefresher(
+        controller: _refreshController,
+        enablePullDown: true,
+        enablePullUp: false,
+        onRefresh: () {
+          context.read<WeatherBloc>().add(const WeatherEvent.loadWeather());
+          _refreshController.refreshCompleted();
         },
-        itemBuilder: (context, index) {
-          return WeatherCard(
-            entity: WeatherEntity(
-              name: 'name',
-              description: 'description',
-              date: DateTime.now(),
-              status: WeatherStatus.brokenClouds,
-              temperature: 20,
-              minTemperature: 20,
-              maxTemperature: 20,
-              image: Assets.images.brokenClouds,
-            ),
-            onTap: () {},
-          );
-        },
+        child: BlocBuilder<WeatherBloc, WeatherState>(
+          builder: (context, state) {
+            return ListView.separated(
+              padding: const EdgeInsets.only(top: 12),
+              itemCount: 10,
+              separatorBuilder: (context, index) {
+                return const Divider(
+                  color: Colors.grey,
+                );
+              },
+              itemBuilder: (context, index) {
+                return const WeatherLoadingCard();
+              },
+            );
+            return state.weatherList.when(
+              loading: (_) {
+                return ListView.separated(
+                  padding: const EdgeInsets.only(top: 12),
+                  itemCount: 10,
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: Colors.grey,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return const WeatherLoadingCard();
+                  },
+                );
+              },
+              success: (_, __, data) {
+                if (data == null) {
+                  return const WeatherEmptyWidget();
+                }
+                return ListView.separated(
+                  padding: const EdgeInsets.only(top: 12),
+                  itemCount: data.length,
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: Colors.grey,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return WeatherCard(
+                      entity: data[index],
+                      onTap: () {
+                        AutoRouter.of(context)
+                            .push(WeatherDetailRouter(entity: data[index]));
+                      },
+                    );
+                  },
+                );
+              },
+              error: (_, __, ___) {
+                return const WeatherErrorWidget();
+              },
+            );
+          },
+        ),
       ),
     );
   }

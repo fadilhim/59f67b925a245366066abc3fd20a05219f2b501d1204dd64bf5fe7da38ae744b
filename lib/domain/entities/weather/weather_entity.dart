@@ -9,10 +9,9 @@ class WeatherEntity with _$WeatherEntity {
     required String name,
     required String description,
     required DateTime date,
-    required WeatherStatus status,
     required double temperature,
-    required double minTemperature,
-    required double maxTemperature,
+    double? minTemperature,
+    double? maxTemperature,
     required AssetGenImage image,
   }) = _WeatherEntity;
 }

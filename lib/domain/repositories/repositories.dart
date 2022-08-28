@@ -1,0 +1,1 @@
+export 'package:weather/domain/repositories/weather/weather_repository.dart';
