@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:weather/domain/entities/entities.dart';
-import 'package:weather/gen/assets.gen.dart';
 import 'package:weather/presentation/utilities/utilities.dart';
 
 class WeatherDetailPage extends StatefulWidget {
